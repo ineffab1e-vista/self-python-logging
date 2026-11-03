@@ -59,7 +59,7 @@ def setup_logging(
 
     if log_to_stderr:
         config["formatters"]["stream"] = {
-            "format": "%(asctime)s [%(levelname)8s]\n`%(module)s:%(lineno)d`\n%(message)s\n",
+            "format": "[%(levelname)8s] %(asctime)s\n`%(module)s:%(lineno)d`\n%(message)s\n",
             "datefmt": "%Y-%m-%dT%H:%M:%S%z",
         }
         config["handlers"]["stderr"] = {
