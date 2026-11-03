@@ -28,19 +28,10 @@ __all__ = ["JSONFormatter", "setup_logging"]
 def setup_logging(
     log_to_stderr: bool = True,
     log_to_dir: Path | None = None,
+    log_to_server: None = None,
     capture_warnings: bool = False,
     capture_exceptions: bool = False,
 ):
-    formatters = {
-        "stream": {
-            "format": "[%(levelname)s|%(module)s:%(lineno)d|%(asctime)s] %(message)s",
-            "datefmt": "%Y-%m-%dT%H:%M:%S%z",
-        },
-        "jsonl": {
-            # Set the formatter class
-            "()": JSONFormatter,
-        },
-    }
     config = {
         # Mandatory to have a version, although we don't use multiple configurations for different purposes.
         "version": 1,
@@ -84,7 +75,10 @@ def setup_logging(
         config["handlers"]["@@QUEUE_HANDLER"]["handlers"].append("stderr")
 
     if log_to_dir:
-        config["formatters"]["jsonl"] = formatters["jsonl"]
+        config["formatters"]["jsonl"] = {
+            # Set the formatter class
+            "()": JSONFormatter,
+        }
         config["handlers"]["local-file"] = {
             # Use "RotatingFileHandler" to prevent having one very huge file.
             "class": "logging.handlers.RotatingFileHandler",
@@ -100,6 +94,18 @@ def setup_logging(
             "backupCount": 128,
         }
         config["handlers"]["@@QUEUE_HANDLER"]["handlers"].append("local-file")
+
+    if log_to_server:
+        config["handlers"]["server"] = {
+            "class": "logging.handlers.HTTPHandler",
+            "level": "DEBUG",
+            "host": "localhost:8443",  # [TODO] parameter
+            "url": "/logs",  # [TODO] parameter
+            "method": "POST",
+            "secure": True,  # [TODO] parameter
+            "context": context,  # [TODO] parameter
+        }
+        config["handlers"]["@@QUEUE_HANDLER"]["handlers"].append("server")
 
     # pass the modified config and give it to all
     logging.config.dictConfig(config)
