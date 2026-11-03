@@ -67,7 +67,10 @@ def setup_logging(
     }
 
     if log_to_stderr:
-        config["formatters"]["stream"] = formatters["stream"]
+        config["formatters"]["stream"] = {
+            "format": "%(asctime)s [%(levelname)8s]\n`%(module)s:%(lineno)d`\n%(message)s\n",
+            "datefmt": "%Y-%m-%dT%H:%M:%S%z",
+        }
         config["handlers"]["stderr"] = {
             # Use the "StreamHandler" class from the "logging" module.
             "class": "logging.StreamHandler",
