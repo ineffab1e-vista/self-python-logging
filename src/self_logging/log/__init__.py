@@ -119,7 +119,7 @@ def setup_logging(
             exc_value: BaseException,
             exc_traceback: TracebackType | None,
         ):
-            logger = logging.getLogger("__exception__")
+            logger = logging.getLogger("root")
             logger.critical(
                 exc_value,
                 exc_info=(exc_type, exc_value, exc_traceback),
