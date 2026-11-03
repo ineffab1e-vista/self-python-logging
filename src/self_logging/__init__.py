@@ -19,11 +19,6 @@ from .json import JSONFormatter
 
 __all__ = ["JSONFormatter", "setup_logging"]
 
-# logging modes:
-# - log warnings, errors, and exceptions to stderr
-# - log ordinary logs to local file
-# - [TODO] log ordinary logs to remote server
-
 
 def setup_logging(
     log_to_stderr: bool = True,
