@@ -16,14 +16,15 @@ from pathlib import Path
 from types import TracebackType
 
 from .json import JSONFormatter
+from .server import HTTPHandlerArgument
 
-__all__ = ["JSONFormatter", "setup_logging"]
+__all__ = ["setup_logging"]
 
 
 def setup_logging(
     log_to_stderr: bool = True,
     log_to_dir: Path | None = None,
-    log_to_server: None = None,
+    log_to_server: HTTPHandlerArgument | None = None,
     capture_warnings: bool = False,
     capture_exceptions: bool = False,
 ):
@@ -94,11 +95,11 @@ def setup_logging(
         config["handlers"]["server"] = {
             "class": "logging.handlers.HTTPHandler",
             "level": "DEBUG",
-            "host": "localhost:8443",  # [TODO] parameter
-            "url": "/logs",  # [TODO] parameter
+            "host": log_to_server.host,
+            "url": log_to_server.url,
             "method": "POST",
-            "secure": True,  # [TODO] parameter
-            "context": context,  # [TODO] parameter
+            "secure": log_to_server.context is not None,
+            "context": log_to_server.context,
         }
         config["handlers"]["@@QUEUE_HANDLER"]["handlers"].append("server")
 
