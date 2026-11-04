@@ -22,11 +22,12 @@ __all__ = ["setup_logging"]
 
 
 def setup_logging(
+    *,
     log_to_stderr: bool = True,
     log_to_dir: Path | None = None,
     log_to_server: HTTPHandlerArgument | None = None,
     capture_warnings: bool = False,
-    capture_exceptions: bool = False,
+    capture_uncaught_exceptions: bool = False,
 ):
     config = {
         # Mandatory to have a version, although we don't use multiple configurations for different purposes.
@@ -117,8 +118,9 @@ def setup_logging(
         # Log all raised warnings.
         logging.captureWarnings(True)
 
-    if capture_exceptions:
-        # Log all raised exceptions.
+    if capture_uncaught_exceptions:
+        # Log raised exceptions in the main thread.
+        # [TODO] should I concern about other thread/process exceptions?
         def custom_except_hook(
             exc_type: type[BaseException],
             exc_value: BaseException,
@@ -126,7 +128,7 @@ def setup_logging(
         ):
             logger = logging.getLogger("root")
             logger.critical(
-                exc_value,
+                "Uncaught exception that breaks",
                 exc_info=(exc_type, exc_value, exc_traceback),
             )
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
