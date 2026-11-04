@@ -1,7 +1,7 @@
 [project]
 name = "self-logging"
-version = "0.1.0"
-description = "Personal use logging module"
+version = "1.0.0"
+description = "Personal use logging module."
 readme = "README.md"
 authors = [
     { name = "Hanzhi Yin", email = "36621030+ineffab1e-vista@users.noreply.github.com" }

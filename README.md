@@ -1,3 +1,3 @@
-# Self Logging Module
+# Self Logging
 
-Logging module used personally.
+Personal used logging module.
